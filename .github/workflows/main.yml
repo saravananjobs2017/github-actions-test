@@ -1,17 +1,44 @@
-name: Jira Webhook Trigger
+# name: Jira Webhook Trigger
+
+# on:
+#   repository_dispatch:
+#     types: do-something
+#   workflow_dispatch:
+
+# jobs:
+#   jira_trigger_job:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#       - name: Print variables
+#         run: |
+#          echo ${{ github.event.client_payload.jira_issue_key }}
+#          echo ${{ github.event.client_payload.jira_assignee }}
+
+name: Triggered from Jira
 
 on:
-  repository_dispatch:
-    types: do-something
   workflow_dispatch:
+    inputs:
+      issueKey:
+        description: "Jira Issue Key"
+        required: true
+      summary:
+        description: "Issue Summary"
+        required: true
+      customField:
+        description: "Custom Field Value"
+        required: false
 
 jobs:
-  jira_trigger_job:
+  process_jira_data:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Print variables
-        run: |
-         echo ${{ github.event.client_payload.jira_issue_key }}
-         echo ${{ github.event.client_payload.jira_assignee }}
+      - name: Print Issue Key
+        run: echo "Issue Key: ${{ github.event.inputs.issueKey }}"
+      - name: Print Summary
+        run: echo "Summary: ${{ github.event.inputs.summary }}"
+      - name: Print Custom Field
+        run: echo "Custom Field: ${{ github.event.inputs.customField }}"
+
