@@ -34,4 +34,8 @@ jobs:
         run: echo "Summary:" ${{ github.event.client_payload.summary }}
       - name: Print Custom Field
         run: echo "Custom Field:" ${{ github.event.client_payload.customField }}
+      - name: Print assignee
+        run: echo "Summary:" ${{ github.event.client_payload.assignee }}
+      - name: Print description
+        run: echo "Summary:" ${{ github.event.client_payload.description }}
 
