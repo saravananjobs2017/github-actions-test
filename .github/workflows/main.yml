@@ -19,26 +19,19 @@
 name: Triggered from Jira
 
 on:
-  workflow_dispatch:
-    inputs:
-      issueKey:
-        description: "Jira Issue Key"
-        required: true
-      summary:
-        description: "Issue Summary"
-        required: true
-      customField:
-        description: "Custom Field Value"
-        required: false
+  repository_dispatch:
+    types: do-something #Ensure this matches `event_type` in Jira
 
 jobs:
   process_jira_data:
     runs-on: ubuntu-latest
     steps:
+      - name: Print Full Payload
+        run: echo "${{ toJson(github.event.client_payload) }}"
       - name: Print Issue Key
-        run: echo "Issue Key: ${{ github.event.inputs.issueKey }}"
+        run: echo "Issue Key:" ${{ github.event.client_payload.issueKey }}
       - name: Print Summary
-        run: echo "Summary: ${{ github.event.inputs.summary }}"
+        run: echo "Summary:" ${{ github.event.client_payload.summary }}
       - name: Print Custom Field
-        run: echo "Custom Field: ${{ github.event.inputs.customField }}"
+        run: echo "Custom Field:" ${{ github.event.client_payload.customField }}
 
