@@ -28,15 +28,17 @@ jobs:
    
     steps:
       - name: Print Full Payload
-        run: echo "${{ toJson(github.event.client_payload) }}" > my_var.txt
+        run: echo "${{ toJson(github.event.client_payload) }}" >> $GITHUB_ENV
       - name: Print Issue Key
-        run: echo "Issue Key:" ${{ github.event.client_payload.issueKey }}
+        run: echo "Issue Key:" ${{ github.event.client_payload.issueKey }} >> $GITHUB_ENV
       - name: Print Summary
-        run: echo "Summary:" ${{ github.event.client_payload.summary }}
+        run: echo "Summary:" ${{ github.event.client_payload.summary }} >> $GITHUB_ENV
       - name: Print Custom Field
-        run: echo "snow_chg_id:" ${{ github.event.client_payload.snow_chg_id }}
+        run: echo "snow_chg_id:" ${{ github.event.client_payload.snow_chg_id }} >> $GITHUB_ENV
       - name: Print assignee
-        run: echo "Summary:" ${{ github.event.client_payload.assignee }}
+        run: echo "Summary:" ${{ github.event.client_payload.assignee }} >> $GITHUB_ENV
       - name: Print description
-        run: echo "Summary:" ${{ github.event.client_payload.description }}
-
+        run: echo "Summary:" ${{ github.event.client_payload.description }} >> $GITHUB_ENV
+      - name: print env values
+        run : echo $GITHUB_ENV
+  
