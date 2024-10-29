@@ -41,4 +41,3 @@ jobs:
         run: echo "Summary:" ${{ github.event.client_payload.description }} >> $GITHUB_ENV
       - name: print env values
         run: cat $GITHUB_ENV
-  
