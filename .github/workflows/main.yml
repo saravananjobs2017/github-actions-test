@@ -25,9 +25,10 @@ on:
 jobs:
   process_jira_data:
     runs-on: ubuntu-latest
+   
     steps:
       - name: Print Full Payload
-        run: echo "${{ toJson(github.event.client_payload) }}"
+        run: echo "${{ toJson(github.event.client_payload) }}" > my_var.txt
       - name: Print Issue Key
         run: echo "Issue Key:" ${{ github.event.client_payload.issueKey }}
       - name: Print Summary
