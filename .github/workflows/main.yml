@@ -32,7 +32,9 @@ jobs:
       - name: Print Issue Key
         run: echo 'Issue Key=${{ github.event.client_payload.issueKey }} | jq -c .)' >> $GITHUB_ENV
       - name: Print Summary
-        run: echo "Summary:" ${{ github.event.client_payload.summary }} >> $GITHUB_ENV
+        run: echo 'Summary=${{ github.event.client_payload.summary }} | jq -c .)' >> $GITHUB_ENV
+      - name: print env values
+        run: cat $GITHUB_ENV
       - name: Print Custom Field
         run: echo "snow_chg_id:" ${{ github.event.client_payload.snow_chg_id }} >> $GITHUB_ENV
       - name: Print assignee
