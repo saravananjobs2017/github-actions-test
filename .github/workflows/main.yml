@@ -28,7 +28,7 @@ jobs:
    
     steps:
       - name: Print Full Payload
-        run: echo "${{ toJson(github.event.client_payload) }}" >> $GITHUB_ENV
+        run: echo "${{ toJson(github.event.client_payload) }}" 
       - name: Print Issue Key
         run: echo "Issue Key:" ${{ github.event.client_payload.issueKey }} >> $GITHUB_ENV
       - name: Print Summary
