@@ -55,13 +55,5 @@ jobs:
         run: |
           echo "CHARM_ID: $CHARM_ID"
           echo "ISSUE_KEY: $ISSUE_KEY"
-          curl -X PUT \
-            -u "saravanan.dhanapal@accenture.com:ATATT3xFfGF0TgYOaSE0u9k0iCfRzvb1EQWykdosPd2e-8R9Hf2VCbbSsYVBd-FVzZY2c8okBpdBOwUWHCRfd_jr5NBsaUq1S5Fv6hN3h6wwPO8Di_NaFc4EbOcCFmiomj3sJ7_w4erQH5AwtIDt2agvhewANdJHpZKzMC2Q8ZC9Jt2cCTaDb1s=0D272DE9" \
-            -H "Content-Type: application/json" \
-            -d '{
-                  "fields": {
-                    "customfield_10440": "'"$CHARM_ID"'"
-                  }
-                }' \
-            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/$ISSUE_KEY"
+         
 
