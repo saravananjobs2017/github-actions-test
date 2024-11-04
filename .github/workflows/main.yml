@@ -43,3 +43,10 @@ jobs:
         run: echo "Summary:" ${{ github.event.client_payload.description }} >> $GITHUB_ENV
       - name: print env values
         run: cat $GITHUB_ENV
+      - name: Update charm id in jira
+        env:
+          ISSUE_KEY: echo ${{ github.event.client_payload.issueKey }}
+          CHARM_ID: echo "1234567"
+        run: |
+          echo $CHARM_ID
+          echo $ISSUE_KEY
