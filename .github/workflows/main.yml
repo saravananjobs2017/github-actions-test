@@ -40,13 +40,13 @@ jobs:
         run: cat $GITHUB_ENV
 
       - name: Print Custom Field
-        run: echo "snow_chg_id: ${{ github.event.client_payload.snow_chg_id }}"
+        run: echo "snow_chg_id:" ${{ github.event.client_payload.snow_chg_id }}
 
       - name: Print assignee
-        run: echo "Assignee: ${{ github.event.client_payload.assignee }}"
+        run: echo "Assignee:" ${{ github.event.client_payload.assignee }}
 
       - name: Print description
-        run: echo "Description: ${{ github.event.client_payload.description }}"
+        run: echo "Description:" ${{ github.event.client_payload.description }}
 
       - name: Update charm id in jira
         env:
