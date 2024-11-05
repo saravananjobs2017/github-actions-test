@@ -19,8 +19,8 @@
 name: Triggered from Jira
 
 on:
-  # repository_dispatch:
-    # types: do-something # Ensure this matches `event_type` in Jira
+  repository_dispatch:
+    types: do-something # Ensure this matches `event_type` in Jira
     workflow_dispatch:
     
 jobs:
