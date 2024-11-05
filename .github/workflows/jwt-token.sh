@@ -4,7 +4,7 @@ set -o pipefail
 
 client_id="1045288" # Client ID as first argument
 
-pem=$( cat ./script/test-poc-sara.2024-11-03.private-key.pem ) # file path of the private key as second argument
+pem=$( cat .github/workflow/test-poc-sara.2024-11-03.private-key.pem ) # file path of the private key as second argument
 
 now=$(date +%s)
 iat=$((${now} - 60)) # Issues 60 seconds in the past
