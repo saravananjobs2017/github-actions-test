@@ -20,7 +20,7 @@ name: Triggered from Jira
 
 on:
   repository_dispatch:
-    types: do-something # Ensure this matches `event_type` in Jira
+    # types: do-something # Ensure this matches `event_type` in Jira
 
 jobs:
   process_jira_data:
