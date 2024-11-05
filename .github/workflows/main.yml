@@ -52,6 +52,7 @@ jobs:
       #   run: echo "Description:" ${{ github.event.client_payload.description }}
 
       - name: Update charm id in jira
+        shell: bash
         # env:
         #   ISSUE_KEY: "TESTING-18"
         #   CHARM_ID: "1234567"  # Set CHARM_ID directly
