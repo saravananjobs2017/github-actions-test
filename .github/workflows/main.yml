@@ -55,7 +55,6 @@ jobs:
         #   CHARM_ID: "1234567"  # Set CHARM_ID directly
         run: |
            set -x
-           chmod +x .github/workflows/script/jwt-token.sh
-           sh .github/workflows/script/jwt-token.sh
-         
-
+           chmod +x .github/workflows/jwt-token.sh
+           sh .github/workflows/jwt-token.sh
+        
