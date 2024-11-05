@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
-set -o pipefail
+set -x
+#set -o pipefail
 
 client_id="1045288" # Client ID as first argument
 
