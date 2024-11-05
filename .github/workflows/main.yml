@@ -19,9 +19,10 @@
 name: Triggered from Jira
 
 on:
-  repository_dispatch:
+  # repository_dispatch:
     # types: do-something # Ensure this matches `event_type` in Jira
-
+    workflow_dispatch:
+    
 jobs:
   process_jira_data:
     runs-on: ubuntu-latest
