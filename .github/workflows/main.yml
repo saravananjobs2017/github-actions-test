@@ -1,9 +1,9 @@
 # name: Jira Webhook Trigger
 
-# on:
-#   repository_dispatch:
-#     types: do-something
-#   workflow_dispatch:
+on:
+  # repository_dispatch:
+  #   types: do-something
+  workflow_dispatch:
 
 # jobs:
 #   jira_trigger_job:
