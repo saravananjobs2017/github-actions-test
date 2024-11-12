@@ -58,8 +58,19 @@ jobs:
         #   ISSUE_KEY: "TESTING-18"
         #   CHARM_ID: "1234567"  # Set CHARM_ID directly
         run: |
-           echo "${{secrets.name}}"
-           # set -x
-           # chmod +x .github/workflows/jwt-token.sh
-           # sh .github/workflows/jwt-token.sh
-        
+           response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+             -u "${{secrets.JIRA_API_USER}}:${{secrets.JIRA_API_TOKEN}}" \
+             -H "Content-Type: application/json" \
+             -d '{
+                   "fields": {
+                     "customfield_10440": "'"123456"'"
+                   }
+                 }' \
+             "https://eqn-nextgen.atlassian.net/rest/api/3/issue/$ISSUE_KEY")
+           if [ "$response_code" -eq 200 ] || [ "$response_code" -eq 204 ]; 
+           then
+             echo "Success: The request was successful with status code $response_code."
+           else
+             echo "Error: The request failed with status code $response_code"
+             exit 1
+           fi
