@@ -66,7 +66,7 @@ jobs:
                      "customfield_10440": "'"123456"'"
                    }
                  }' \
-             "https://eqn-nextgen.atlassian.net/rest/api/3/issue/$ISSUE_KEY")
+             "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
            if [ "$response_code" -eq 200 ] || [ "$response_code" -eq 204 ]; 
            then
              echo "Success: The request was successful with status code $response_code."
