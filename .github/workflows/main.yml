@@ -57,7 +57,8 @@ jobs:
         #   ISSUE_KEY: "TESTING-18"
         #   CHARM_ID: "1234567"  # Set CHARM_ID directly
         run: |
-           set -x
-           chmod +x .github/workflows/jwt-token.sh
-           sh .github/workflows/jwt-token.sh
+           echo "${{secrets.name}}"
+           # set -x
+           # chmod +x .github/workflows/jwt-token.sh
+           # sh .github/workflows/jwt-token.sh
         
