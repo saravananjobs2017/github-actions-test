@@ -52,25 +52,58 @@ jobs:
       # - name: Print description
       #   run: echo "Description:" ${{ github.event.client_payload.description }}
 
-      - name: Update charm id in jira
-        shell: bash
-        # env:
-        #   ISSUE_KEY: "TESTING-18"
-        #   CHARM_ID: "1234567"  # Set CHARM_ID directly
+      # - name: Update charm id in jira
+      #   shell: bash
+      #   # env:
+      #   #   ISSUE_KEY: "TESTING-18"
+      #   #   CHARM_ID: "1234567"  # Set CHARM_ID directly
+      #   run: |
+      #      response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+      #        -u "${{secrets.JIRA_API_USER}}:${{secrets.JIRA_API_TOKEN}}" \
+      #        -H "Content-Type: application/json" \
+      #        -d '{
+      #              "fields": {
+      #                "customfield_10440": "'"123456"'"
+      #              }
+      #            }' \
+      #        "https://your-domain.atlassian.net/rest/api/3/issue/TESTING-18")
+      #      if [ "$response_code" -eq 200 ] || [ "$response_code" -eq 204 ]; 
+      #      then
+      #        echo "Success: The request was successful with status code $response_code."
+      #      else
+      #        echo "Error: The request failed with status code $response_code"
+      #        exit 1
+      #      fi
+
+      - name: Generate OAuth Token
+        id: generate_token
+        env:
+           # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
+           # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
+           # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
+           SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
+           SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
+           SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
         run: |
-           response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
-             -u "${{secrets.JIRA_API_USER}}:${{secrets.JIRA_API_TOKEN}}" \
-             -H "Content-Type: application/json" \
-             -d '{
-                   "fields": {
-                     "customfield_10440": "'"123456"'"
-                   }
-                 }' \
-             "https://your-domain.atlassian.net/rest/api/3/issue/TESTING-18")
-           if [ "$response_code" -eq 200 ] || [ "$response_code" -eq 204 ]; 
-           then
-             echo "Success: The request was successful with status code $response_code."
-           else
-             echo "Error: The request failed with status code $response_code"
+           # Use curl to get the token
+           response=$(curl -s -X POST "$SAP_TOKEN_URL" \
+             -H "Content-Type: application/x-www-form-urlencoded" \
+             -u "$SAP_CLIENT_ID:$SAP_CLIENT_SECRET" \
+             -d "grant_type=client_credentials")
+           
+           # Parse the access token
+           token=$(echo "$response" | jq -r '.access_token')
+   
+           # Check if the token is empty
+           if [ -z "$token" ]; then
+             echo "Failed to retrieve access token"
+             echo "Response: $response"
              exit 1
            fi
+   
+           echo "Token retrieved successfully"
+           echo "Access Token: $token"
+   
+           # Save the token as an output for later steps
+           echo "token=$token" >> $GITHUB_ENV
+
