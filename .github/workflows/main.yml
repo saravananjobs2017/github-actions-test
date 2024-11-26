@@ -81,9 +81,9 @@ jobs:
            # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
            # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
            # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
-           SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
-           SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
-           SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
+           # SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
+           # SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
+           # SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
         run: |
            # Use curl to get the token
            response=$(curl -s -X POST "$SAP_TOKEN_URL" \
