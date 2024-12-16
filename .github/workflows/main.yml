@@ -109,7 +109,7 @@ jobs:
            # # Save the token as an output for later steps
            # echo "token=$token" >> $GITHUB_ENV
            curl -s -X POST \
-           -u "JIRA_API_USER:$JIRA_API_TOKEN" \
+            -u "saravanan.dhanapal@accenture.com:ATATT3xFfGF0TgYOaSE0u9k0iCfRzvb1EQWykdosPd2e-8R9Hf2VCbbSsYVBd-FVzZY2c8okBpdBOwUWHCRfd_jr5NBsaUq1S5Fv6hN3h6wwPO8Di_NaFc4EbOcCFmiomj3sJ7_w4erQH5AwtIDt2agvhewANdJHpZKzMC2Q8ZC9Jt2cCTaDb1s=0D272DE9" \
            -H "Content-Type: application/json" \
            --data '{
              "transition": {
