@@ -109,11 +109,11 @@ jobs:
            # # Save the token as an output for later steps
            # echo "token=$token" >> $GITHUB_ENV
            curl -s -X POST \
-             -u "JIRA_API_USER:$JIRA_API_TOKEN" \
-             --url "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18/transitions" \
-            -H "Content-Type: application/json" \
-            --data '{
-              "transition": {
-              "id": "151"
-               }
-                 }' 
+           -u "JIRA_API_USER:$JIRA_API_TOKEN" \
+           -H "Content-Type: application/json" \
+           --data '{
+             "transition": {
+               "id": "151"
+             }
+           }' \
+           "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18/transitions"
