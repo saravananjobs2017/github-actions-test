@@ -77,10 +77,10 @@ jobs:
 
       - name: Generate OAuth Token
         id: generate_token
-        env:
-           JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
-           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-           # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
+        # env:
+        #    JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
+        #    JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        #    # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
            # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
            # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
            # SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
@@ -109,7 +109,7 @@ jobs:
            # # Save the token as an output for later steps
            # echo "token=$token" >> $GITHUB_ENV
            curl -s -X POST \
-            -u "saravanan.dhanapal@accenture.com:ATATT3xFfGF0TgYOaSE0u9k0iCfRzvb1EQWykdosPd2e-8R9Hf2VCbbSsYVBd-FVzZY2c8okBpdBOwUWHCRfd_jr5NBsaUq1S5Fv6hN3h6wwPO8Di_NaFc4EbOcCFmiomj3sJ7_w4erQH5AwtIDt2agvhewANdJHpZKzMC2Q8ZC9Jt2cCTaDb1s=0D272DE9" \
+            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
            -H "Content-Type: application/json" \
            --data '{
              "transition": {
