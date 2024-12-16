@@ -78,6 +78,8 @@ jobs:
       - name: Generate OAuth Token
         id: generate_token
         env:
+           JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
+           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
            # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
            # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
            # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
@@ -85,25 +87,33 @@ jobs:
            # SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
            # SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
         run: |
-           # Use curl to get the token
-           response=$(curl -s -X POST "$SAP_TOKEN_URL" \
-             -H "Content-Type: application/x-www-form-urlencoded" \
-             -u "$SAP_CLIENT_ID:$SAP_CLIENT_SECRET" \
-             -d "grant_type=client_credentials")
+           # # Use curl to get the token
+           # response=$(curl -s -X POST "$SAP_TOKEN_URL" \
+           #   -H "Content-Type: application/x-www-form-urlencoded" \
+           #   -u "$SAP_CLIENT_ID:$SAP_CLIENT_SECRET" \
+           #   -d "grant_type=client_credentials")
            
-           # Parse the access token
-           token=$(echo "$response" | jq -r '.access_token')
+           # # Parse the access token
+           # token=$(echo "$response" | jq -r '.access_token')
    
-           # Check if the token is empty
-           if [ -z "$token" ]; then
-             echo "Failed to retrieve access token"
-             echo "Response: $response"
-             exit 1
-           fi
+           # # Check if the token is empty
+           # if [ -z "$token" ]; then
+           #   echo "Failed to retrieve access token"
+           #   echo "Response: $response"
+           #   exit 1
+           # fi
    
-           echo "Token retrieved successfully"
-           echo "Access Token: $token"
+           # echo "Token retrieved successfully"
+           # echo "Access Token: $token"
    
-           # Save the token as an output for later steps
-           echo "token=$token" >> $GITHUB_ENV
-
+           # # Save the token as an output for later steps
+           # echo "token=$token" >> $GITHUB_ENV
+           curl -s -X POST \
+             -u "JIRA_API_USER:$JIRA_API_TOKEN" \
+             --url "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18/transitions" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "transition": {
+              "id": "151"
+               }
+                 }' 
