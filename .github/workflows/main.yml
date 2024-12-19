@@ -1,21 +1,3 @@
-# name: Jira Webhook Trigger
-
-# on:
-#   # repository_dispatch:
-#   #   types: do-something
-#   workflow_dispatch:
-
-# jobs:
-#   jira_trigger_job:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-#       - name: Print variables
-#         run: |
-#          echo ${{ github.event.client_payload.jira_issue_key }}
-#          echo ${{ github.event.client_payload.jira_assignee }}
-
 name: Triggered from Jira
 
 on:
@@ -75,7 +57,7 @@ jobs:
       #        exit 1
       #      fi
 
-      - name: Generate OAuth Token
+      # - name: Generate OAuth Token
       #   id: generate_token
       #   # env:
       #   #    JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
