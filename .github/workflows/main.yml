@@ -76,50 +76,86 @@ jobs:
       #      fi
 
       - name: Generate OAuth Token
+      #   id: generate_token
+      #   # env:
+      #   #    JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
+      #   #    JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      #   #    # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
+      #      # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
+      #      # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
+      #      # SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
+      #      # SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
+      #      # SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
+      #   run: |
+      #         response=$(curl -X GET \
+      #         -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+      #         -H "Content-Type: application/json" \
+      #          https://eqn-nextgen.atlassian.net/rest/api/2/issue/TESTING-18| grep -o '"customfield_10440":"[^"]*"' | sed 's/.*:"//;s/"$//')
+      #         echo $response
+      #         echo "response_code=$response_code" >> $GITHUB_ENV
+
+      # - name: Check response code and echo success
+      #   run: |
+      #     if [ -n "$response_code" ]; then
+      #       echo "Success"
+      #       response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+      #       -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{
+      #             "fields": {
+      #               "customfield_10440": "Charm_id_old:" $response_code,"charm_id_new: 1234567" 
+      #             }
+      #           }' \
+      #       "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+      #     else
+      #       response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+      #       -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{
+      #             "fields": {
+      #               "customfield_10440": "'123455'"
+      #             }
+      #           }' \
+      #       "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+      #     fi
+      - name: Generate OAuth Token
         id: generate_token
-        # env:
-        #    JIRA_API_USER: ${{ secrets.JIRA_API_USER }}
-        #    JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-        #    # SAP_CLIENT_ID: ${{ secrets.SAP_CLIENT_ID }}
-           # SAP_CLIENT_SECRET: ${{ secrets.SAP_CLIENT_SECRET }}
-           # SAP_TOKEN_URL: ${{ secrets.SAP_TOKEN_URL }}
-           # SAP_CLIENT_ID: h3kpK9Dsh8i51WTZRA50Se7H4GTEcQ3x
-           # SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
-           # SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
         run: |
-              response=$(curl -X GET \
-              -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-              -H "Content-Type: application/json" \
-               https://eqn-nextgen.atlassian.net/rest/api/2/issue/TESTING-18| grep -o '"customfield_10440":"[^"]*"' | sed 's/.*:"//;s/"$//')
-              echo $response
-              echo "response_code=$response_code" >> $GITHUB_ENV
+          response=$(curl -X GET \
+            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            "https://eqn-nextgen.atlassian.net/rest/api/2/issue/TESTING-18" \
+            | grep -o '"customfield_10440":"[^"]*"' | sed 's/.*:"//;s/"$//')
+          echo "response=$response" >> $GITHUB_ENV
 
       - name: Check response code and echo success
         run: |
-          if [ -n "$response_code" ]; then
-            echo "Success"
+          if [ -n "$response" ]; then
+            echo "Success: Found response"
             response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
-            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-                  "fields": {
-                    "customfield_10440": "Charm_id_old:" $response_code,"charm_id_new: 1234567" 
-                  }
-                }' \
-            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+              -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                    \"fields\": {
+                      \"customfield_10440\": \"Charm_id_old: $response, charm_id_new: 1234567\"
+                    }
+                  }" \
+              "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
           else
+            echo "No response found, using default value"
             response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
-            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-                  "fields": {
-                    "customfield_10440": "'123455'"
-                  }
-                }' \
-            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+              -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                    \"fields\": {
+                      \"customfield_10440\": \"123455\"
+                    }
+                  }" \
+              "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
           fi
-        
-   
+          echo "Response Code: $response_code"
+      
+         
            # # Check if the token is empty
            # if [ -z "$token" ]; then
            #   echo "Failed to retrieve access token"
