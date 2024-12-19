@@ -154,14 +154,7 @@ jobs:
               "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
           fi
           echo "Response Code: $response_code"
-      
          
-           # # Check if the token is empty
-           # if [ -z "$token" ]; then
-           #   echo "Failed to retrieve access token"
-           #   echo "Response: $response"
-           #   exit 1
-           # fi
    
            # echo "Token retrieved successfully"
            # echo "Access Token: $token"
