@@ -87,7 +87,7 @@ jobs:
            # SAP_CLIENT_SECRET: tttRQgsmV4ocIuJa
            # SAP_TOKEN_URL: https://devequinor.test.apimanagement.eu10.hana.ondemand.com:443/v2/oauth2/token
         run: |
-           # # Use curl to get the token
+           # Use curl to get the token
            # response=$(curl -s -X POST "$SAP_TOKEN_URL" \
            #   -H "Content-Type: application/x-www-form-urlencoded" \
            #   -u "$SAP_CLIENT_ID:$SAP_CLIENT_SECRET" \
@@ -108,12 +108,18 @@ jobs:
    
            # # Save the token as an output for later steps
            # echo "token=$token" >> $GITHUB_ENV
-           curl -s -X POST \
-            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+           # curl -s -X POST \
+           #  -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+           # -H "Content-Type: application/json" \
+           # --data '{
+           #   "transition": {
+           #     "id": "151"
+           #   }
+           # }' \
+           # "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18/transitions"
+
+           response=$(curl -x GET \
+           -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
            -H "Content-Type: application/json" \
-           --data '{
-             "transition": {
-               "id": "151"
-             }
-           }' \
-           "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18/transitions"
+            https://eqn-nextgen.atlassian.net/rest/api/2/issue/TESTING-18| grep -o '"customfield_10440":"[^"]*"' | sed 's/.*:"//;s/"$//')
+           echo $response
