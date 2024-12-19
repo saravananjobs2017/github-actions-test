@@ -106,7 +106,7 @@ jobs:
                     "customfield_10440": "Charm_id_old:" $response_code,"charm_id_new: 1234567" 
                   }
                 }' \
-            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/$ISSUE_KEY")
+            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
           else
             response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
             -u "$JIRA_API_USER:$JIRA_API_TOKEN" \
@@ -116,7 +116,7 @@ jobs:
                     "customfield_10440": "'123455'"
                   }
                 }' \
-            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/$ISSUE_KEY")
+            "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
           fi
         
    
