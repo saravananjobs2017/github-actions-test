@@ -20,7 +20,7 @@ jobs:
               widgets:
               - type: 'table'
                 title: 'Recent Jobs'
-                issue_query: 'repo:saravananjobs2017/github-actions-test is:success sort:created-desc'
+                issue_query: 'repo:saravananjobs2017/github-actions-test is:issue is:success sort:created-desc'
           token: ${{ secrets.PAT_TOKEN }}
       - name: Upload Dashboard
         uses: actions/upload-artifact@v3
