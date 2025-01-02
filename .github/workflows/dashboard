@@ -1,0 +1,30 @@
+name: 'Generate Dashboard'
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Generate Dashboard
+        uses: ethomson/issue-dashboard@v1
+        with:
+          config: |
+            title: 'GitHub Actions Dashboard'
+            output:
+              format: html
+              filename: 'dashboard.html'
+            sections:
+            - title: 'Executed Jobs'
+              widgets:
+              - type: 'table'
+                title: 'Recent Jobs'
+                issue_query: 'repo:saravananjobs2017/github-actions-test is:success sort:created-desc'
+          token: ${{ secrets.PAT_TOKEN }}
+      - name: Upload Dashboard
+        uses: actions/upload-artifact@v2
+        with:
+          name: dashboard
+          path: dashboard.html
