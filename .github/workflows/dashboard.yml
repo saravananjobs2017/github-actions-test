@@ -1,7 +1,6 @@
 name: 'Generate Dashboard'
 on:
   workflow_dispatch: # Allows manual triggering
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +23,7 @@ jobs:
                 issue_query: 'repo:saravananjobs2017/github-actions-test is:success sort:created-desc'
           token: ${{ secrets.PAT_TOKEN }}
       - name: Upload Dashboard
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dashboard
           path: dashboard.html
