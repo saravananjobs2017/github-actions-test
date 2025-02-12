@@ -103,39 +103,36 @@ jobs:
       - name: Generate OAuth Token
         id: generate_token
         run: |
-          response=$(curl -X GET \
-            -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            "https://eqn-nextgen.atlassian.net/rest/api/2/issue/TESTING-18" \
-            | grep -o '"customfield_10440":"[^"]*"' | sed 's/.*:"//;s/"$//')
-          echo "response=$response" >> $GITHUB_ENV
-
-      - name: Check response code and echo success
-        run: |
-          if [ -n "${{env.response}}" ]; then
-            echo "Success: Found response"
-            response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
-              -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{
-                    \"fields\": {
-                      \"customfield_10440\": \"Charm_id_old: ${{env.response}}, charm_id_new: 1234567\"
-                    }
-                  }" \
-              "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
-          else
-            echo "No response found, using default value"
-            response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
-              -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{
-                    \"fields\": {
-                      \"customfield_10440\": \"123455\"
-                    }
-                  }" \
-              "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
-          fi
-          echo "Response Code: $response_code"
+          response=&(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
+                    --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
+          echo $response
+          echo $response | jq '[.[] | {id: .id, name: .name}]'
+      # - name: Check response code and echo success
+      #   run: |
+      #     if [ -n "${{env.response}}" ]; then
+      #       echo "Success: Found response"
+      #       response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+      #         -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+      #         -H "Content-Type: application/json" \
+      #         -d "{
+      #               \"fields\": {
+      #                 \"customfield_10440\": \"Charm_id_old: ${{env.response}}, charm_id_new: 1234567\"
+      #               }
+      #             }" \
+      #         "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+      #     else
+      #       echo "No response found, using default value"
+      #       response_code=$(curl -o /dev/null -s -w "%{http_code}" -X PUT \
+      #         -u "${{ secrets.JIRA_API_USER }}:${{ secrets.JIRA_API_TOKEN }}" \
+      #         -H "Content-Type: application/json" \
+      #         -d "{
+      #               \"fields\": {
+      #                 \"customfield_10440\": \"123455\"
+      #               }
+      #             }" \
+      #         "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
+      #     fi
+      #     echo "Response Code: $response_code"
          
    
            # echo "Token retrieved successfully"
