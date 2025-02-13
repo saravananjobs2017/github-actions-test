@@ -22,29 +22,41 @@ jobs:
       - name: Install dependencies (if needed)
         run: pip install requests  # Add dependencies if required
 
-      - name: run the qtest code
+      - name: Run the qTest API call
         id: qtest_test_case
         run: |
           set -x
           response=$(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
                     --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
-          RESULT=$(python -c "import json, sys; data = json.loads(sys.argv[1]); ids = [(item['id'], item['name']) for item in data]; print(ids)" "$response")
-          echo "RESULT=$RESULT" >> $GITHUB_ENV
-          # echo $RESULT
-
+      
+          # Ensure response is valid JSON before passing it to Python
+          if [ -z "$response" ]; then
+            echo "API response is empty!"
+            exit 1
+          fi
+      
+          # Process JSON in Python and store the result
+          RESULT=$(python3 -c "import json, sys; 
+          data = json.loads(sys.argv[1]); 
+          ids = [(item['id'], item['name']) for item in data]; 
+          print(json.dumps(ids))" "$response")
+          
+              echo "RESULT=$RESULT" >> $GITHUB_ENV
+      
       - name: Process Data in Python
         run: |
           python3 - <<EOF
           import json
           import os
-
+          
           # Get the environment variable
           val = os.getenv("RESULT", "[]")  # Default to empty list if missing
-          echo "from python validations=$val"
-
+          
+          print(f"From Python validation: {val}")
+          
           # Convert JSON string back to list
           try:
-              data = json.loads(val)
+              data = json.loads(val)  # Ensure it's parsed as JSON
               for item in data:
                   print(f"Test ID: {item[0]}, Test Name: {item[1]}")
           except json.JSONDecodeError as e:
