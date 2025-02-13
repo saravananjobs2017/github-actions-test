@@ -31,12 +31,26 @@ jobs:
           RESULT=$(python -c "import json, sys; data = json.loads(sys.argv[1]); ids = [(item['id'], item['name']) for item in data]; print(ids)" "$response")
           echo "RESULT=$RESULT" >> $GITHUB_ENV
           # echo $RESULT
+
+      - name: Process Data in Python
+        run: |
           python3 - <<EOF
-          val = """${{ env.RESULT }}"""
-          for i in range(len(val)):
-            Print(val[i][0],val[i][1])
+          import json
+          import os
+
+          # Get the environment variable
+          val = os.getenv("RESULT", "[]")  # Default to empty list if missing
+
+          # Convert JSON string back to list
+          try:
+              data = json.loads(val)
+              for item in data:
+                  print(f"Test ID: {item[0]}, Test Name: {item[1]}")
+          except json.JSONDecodeError as e:
+              print(f"Error parsing JSON: {e}")
           EOF
-    
+
+   
            
                         
       
