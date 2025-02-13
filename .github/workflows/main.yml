@@ -28,7 +28,7 @@ jobs:
           response=&(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
                     --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
           echo $response
-          RESULT=$(python -c "import json; data=json.loads('$response'); ids = [(item["id"],item["name"]) for item in data];print(ids)")
+          RESULT=$(python -c "import json; data=json.loads($response); ids = [(item["id"],item["name"]) for item in data];print(ids)")
           echo $RESULT
           echo "RESULT=$RESULT" >> $GITHUB_ENV
       
