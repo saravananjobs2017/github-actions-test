@@ -13,6 +13,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+           python-version: "3.9"  # Uses latest Python 3
+ 
+      - name: Install dependencies (if needed)
+        run: pip install requests  # Add dependencies if required
+
+      - name: run the qtest code
+        id: qtest test case
+        run: |
+          response=&(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
+                    --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
+          echo $response
+          RESULT=$(python -c "import json; data=json.loads('$response'); 
+          echo $RESULT
+          echo "RESULT=$RESULT" >> $GITHUB_ENV
+      
+      
       # - name: Print Full Payload
       #   run: echo "${{ toJson(github.event.client_payload) }}"
 
@@ -100,13 +120,13 @@ jobs:
       #           }' \
       #       "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-18")
       #     fi
-      - name: Generate OAuth Token
-        id: generate_token
-        run: |
-          response=&(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
-                    --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
-          echo $response
-          echo $response | jq '[.[] | {id: .id, name: .name}]'
+      # - name: Generate OAuth Token
+      #   id: generate_token
+      #   run: |
+      #     response=&(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
+      #               --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
+      #     echo $response
+      #     echo $response | jq '[.[] | {id: .id, name: .name}]'
       # - name: Check response code and echo success
       #   run: |
       #     if [ -n "${{env.response}}" ]; then
