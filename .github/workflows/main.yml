@@ -28,10 +28,21 @@ jobs:
           set -x
           response=$(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
                     --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
-          echo $response
-          RESULT=$(python -c "import json; data=json.loads('$response'); ids = [(item["id"],item["name"]) for item in data];print(ids)")
-          echo $RESULT
+          RESULT=$(python -c "
+                import json, sys
+                try:
+                    data = json.loads(sys.argv[1])  # Pass JSON as command-line argument
+                    ids = [(item['id'], item['name']) for item in data]
+                    print(ids)
+                except json.JSONDecodeError as e:
+                    print(f'JSON Decode Error: {e}', file=sys.stderr)
+                    sys.exit(1)
+                " "$response")
           echo "RESULT=$RESULT" >> $GITHUB_ENV
+          echo $RESULT
+    
+           
+                        
       
       
       # - name: Print Full Payload
