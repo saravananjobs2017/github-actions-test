@@ -40,10 +40,13 @@ jobs:
 
           # Get the environment variable
           val = os.getenv("RESULT", "[]")  # Default to empty list if missing
+          echo "from python validations"
+          echo $val
 
           # Convert JSON string back to list
           try:
-              for item in val:
+              data = json.loads(val)
+              for item in data:
                   print(f"Test ID: {item[0]}, Test Name: {item[1]}")
           except json.JSONDecodeError as e:
               print(f"Error parsing JSON: {e}")
