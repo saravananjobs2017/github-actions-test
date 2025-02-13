@@ -43,8 +43,7 @@ jobs:
 
           # Convert JSON string back to list
           try:
-              data = json.loads(val)
-              for item in data:
+              for item in val:
                   print(f"Test ID: {item[0]}, Test Name: {item[1]}")
           except json.JSONDecodeError as e:
               print(f"Error parsing JSON: {e}")
