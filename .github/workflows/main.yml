@@ -43,8 +43,8 @@ jobs:
           
               echo "RESULT=$RESULT" >> $GITHUB_ENV
       
-              - name: Process Data in Python
-              run: |
+      - name: Process Data in Python
+        run: |
                 python3 - <<EOF
                 import json
                 import requests
@@ -76,8 +76,8 @@ jobs:
                     print(f"Error parsing JSON: {e}")
                 EOF
             
-                        
-      
+                          
+
       
       # - name: Print Full Payload
       #   run: echo "${{ toJson(github.event.client_payload) }}"
