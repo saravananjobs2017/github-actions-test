@@ -24,8 +24,11 @@ jobs:
       #     token: ${{ secrets.PAT_TOKEN }}
       - name: run curl
         run: |
+         # response=$(curl -u "saravanan.dhanapal@accenture.com:ATATT3xFfGF0TgYOaSE0u9k0iCfRzvb1EQWykdosPd2e-8R9Hf2VCbbSsYVBd-FVzZY2c8okBpdBOwUWHCRfd_jr5NBsaUq1S5Fv6hN3h6wwPO8Di_NaFc4EbOcCFmiomj3sJ7_w4erQH5AwtIDt2agvhewANdJHpZKzMC2Q8ZC9Jt2cCTaDb1s=0D272DE9" \
+         # -X GET "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-20" \
+         # -H "Accept: application/json" | jq -r '.[0].emailAddress')
          response=$(curl -u "saravanan.dhanapal@accenture.com:ATATT3xFfGF0TgYOaSE0u9k0iCfRzvb1EQWykdosPd2e-8R9Hf2VCbbSsYVBd-FVzZY2c8okBpdBOwUWHCRfd_jr5NBsaUq1S5Fv6hN3h6wwPO8Di_NaFc4EbOcCFmiomj3sJ7_w4erQH5AwtIDt2agvhewANdJHpZKzMC2Q8ZC9Jt2cCTaDb1s=0D272DE9" \
-         -X GET "https://eqn-nextgen.atlassian.net/rest/api/3/issue/TESTING-20" \
+         -X GET "https://eqn-nextgen.atlassian.net/rest/api/3/user/search?query=AssigneeName" \
          -H "Accept: application/json" | jq -r '.[0].emailAddress')
          echo $response
          
