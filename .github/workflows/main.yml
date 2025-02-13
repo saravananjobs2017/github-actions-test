@@ -40,8 +40,7 @@ jobs:
 
           # Get the environment variable
           val = os.getenv("RESULT", "[]")  # Default to empty list if missing
-          echo "from python validations"
-          echo $val
+          echo "from python validations=$val"
 
           # Convert JSON string back to list
           try:
