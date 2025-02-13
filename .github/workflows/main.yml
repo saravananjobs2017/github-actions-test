@@ -32,7 +32,7 @@ jobs:
           echo "RESULT=$RESULT" >> $GITHUB_ENV
           echo $RESULT
           python3 - <<EOF
-          val = ${{env.RESULT}}
+          val = """${{ env.RESULT }}"""
           for i in range(len(val)):
             Print(val[i][0],val[i][1])
           EOF
