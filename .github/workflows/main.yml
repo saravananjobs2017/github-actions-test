@@ -43,41 +43,39 @@ jobs:
           
               echo "RESULT=$RESULT" >> $GITHUB_ENV
       
-      - name: Process Data in Python
-        run: |
-          python3 - <<EOF
-          import json,requests
-          import os
-          
-          # Get the environment variable
-          val = os.getenv("RESULT", "[]")  # Default to empty list if missing
-          
-          print(f"From Python validation: {val}")
-          
-          # Convert JSON string back to list
-          try:
-              data = json.loads(val)  # Ensure it's parsed as JSON
-              for item in data:
-                url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
-                payload = json.dumps({
-                          "name": {item[1]},
-                          "test_case": {
-                            "id": {item[0]}
-                          }
+              - name: Process Data in Python
+              run: |
+                python3 - <<EOF
+                import json
+                import requests
+                import os
+                
+                # Get the environment variable
+                val = os.getenv("RESULT", "[]")  # Default to empty list if missing
+                
+                print(f"From Python validation: {val}")
+                
+                # Convert JSON string back to list
+                try:
+                    data = json.loads(val)  # Ensure it's parsed as JSON
+                    for item in data:
+                        url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
+                        payload = json.dumps({
+                            "name": item[1],  # Correctly access the name value
+                            "test_case": {
+                                "id": item[0]  # Correctly access the test case ID
+                            }
                         })
-                headers = {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21'
-                }
-                response = requests.request("POST", url, headers=headers, data=payload)
-
-                print(response.text)
-          except json.JSONDecodeError as e:
-              print(f"Error parsing JSON: {e}")
-          EOF
-
-   
-           
+                        headers = {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
+                        }
+                        response = requests.post(url, headers=headers, data=payload)  # Use `post` for clarity
+                        print(response.text)
+                except json.JSONDecodeError as e:
+                    print(f"Error parsing JSON: {e}")
+                EOF
+            
                         
       
       
