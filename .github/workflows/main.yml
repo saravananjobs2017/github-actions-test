@@ -22,59 +22,73 @@ jobs:
       - name: Install dependencies (if needed)
         run: pip install requests  # Add dependencies if required
 
-      - name: Run the qTest API call
-        id: qtest_test_case
+      - name: Fetch values
         run: |
-          set -x
-          response=$(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
-                    --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
+         FIRST_TWO_CHARS="05.04 - Fixed Asset Accounting" 
+         FIRST_TWO_CHARS="${FIRST_TWO_CHARS:0:2}"
+         echo $FIRST_TWO_CHARS
+         echo "FIRST_TWO_CHARS=$FIRST_TWO_CHARS" >> $GITHUB_ENV
+         response=$(curl -v --location 'https://equinor.qtestnet.com/api/v3/projects/119783/modules?search=$FIRST_TWO_CHARS' \
+          --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
+         echo $response
+         echo $response | jq -r '.[0].id'
+       
+
+        #Important code:
+
+      # - name: Run the qTest API call
+      #   id: qtest_test_case
+      #   run: |
+      #     set -x
+      #     response=$(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-cases?parentId=9279526&page=1&expandProps=true&expandSteps=no' \
+      #               --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
       
-          # Ensure response is valid JSON before passing it to Python
-          if [ -z "$response" ]; then
-            echo "API response is empty!"
-            exit 1
-          fi
+      #     # Ensure response is valid JSON before passing it to Python
+      #     if [ -z "$response" ]; then
+      #       echo "API response is empty!"
+      #       exit 1
+      #     fi
       
-          # Process JSON in Python and store the result
-          RESULT=$(python3 -c "import json, sys; 
-          data = json.loads(sys.argv[1]); 
-          ids = [(item['id'], item['name']) for item in data]; 
-          print(json.dumps(ids))" "$response")
+      #     # Process JSON in Python and store the result
+      #     RESULT=$(python3 -c "import json, sys; 
+      #     data = json.loads(sys.argv[1]); 
+      #     ids = [(item['id'], item['name']) for item in data]; 
+      #     print(json.dumps(ids))" "$response")
           
-              echo "RESULT=$RESULT" >> $GITHUB_ENV
+      #         echo "RESULT=$RESULT" >> $GITHUB_ENV
       
-      - name: Process Data in Python
-        run: |
-                python3 - <<EOF
-                import json
-                import requests
-                import os
+      # - name: Process Data in Python
+      #   run: |
+      #           python3 - <<EOF
+      #           import json
+      #           import requests
+      #           import os
                 
-                # Get the environment variable
-                val = os.getenv("RESULT", "[]")  # Default to empty list if missing
+      #           # Get the environment variable
+      #           val = os.getenv("RESULT", "[]")  # Default to empty list if missing
                 
-                print(f"From Python validation: {val}")
+      #           print(f"From Python validation: {val}")
                 
-                # Convert JSON string back to list
-                try:
-                    data = json.loads(val)  # Ensure it's parsed as JSON
-                    for item in data:
-                        url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
-                        payload = json.dumps({
-                            "name": item[1],  # Correctly access the name value
-                            "test_case": {
-                                "id": item[0]  # Correctly access the test case ID
-                            }
-                        })
-                        headers = {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
-                        }
-                        response = requests.post(url, headers=headers, data=payload)  # Use `post` for clarity
-                        print(response.text)
-                except json.JSONDecodeError as e:
-                    print(f"Error parsing JSON: {e}")
-                EOF
+      #           # Convert JSON string back to list
+      #           try:
+      #               data = json.loads(val)  # Ensure it's parsed as JSON
+      #               for item in data:
+      #                   url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
+      #                   payload = json.dumps({
+      #                       "name": item[1],  # Correctly access the name value
+      #                       "test_case": {
+      #                           "id": item[0]  # Correctly access the test case ID
+      #                       }
+      #                   })
+      #                   headers = {
+      #                       "Content-Type": "application/json",
+      #                       "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
+      #                   }
+      #                   response = requests.post(url, headers=headers, data=payload)  # Use `post` for clarity
+      #                   print(response.text)
+      #           except json.JSONDecodeError as e:
+      #               print(f"Error parsing JSON: {e}")
+      #           EOF
             
                           
 
