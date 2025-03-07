@@ -36,10 +36,14 @@ jobs:
          # pass the parent id to get the descendants information.
          response1=$(curl --location 'https://equinor.qtestnet.com/api/v3/projects/119783/modules/10714196?expand=descendants' \
          --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21')
-         echo $response1
-         echo $response1 | jq -r '.children[].id'
-
-         
+         # echo $response1 | jq -r '.children[].id'
+         child_ids=($(echo "$response1" | jq -r '.children[].id'))
+         echo $child_ids
+         for id in "${child_ids[@]}"; do
+            echo "Processing ID: $id"
+            curl --location "https://xx.qtestnet.com/api/v3/projects/119783/test-cases?parentId=$id" \
+              --header "Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
+          done
          
          
        
