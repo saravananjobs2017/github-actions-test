@@ -124,7 +124,7 @@ jobs:
               print(f"Error parsing JSON: {e}")
               exit(2)
           EOF
-
+          done
       # - name: Fetch values
       #   run: |
       #    FIRST_TWO_CHARS="05.04 - Fixed Asset Accounting" 
