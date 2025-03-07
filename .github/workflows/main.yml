@@ -98,32 +98,32 @@ jobs:
 
             # Pass extracted data to Python script
             python3 <<EOF
-import json
-import requests
-import os
+          import json
+          import requests
+          import os
 
-# Load extracted test case data
-val = '''$RESULT'''
-print(f"From Python validation: {val}")
+          # Load extracted test case data
+          val = '''$RESULT'''
+          print(f"From Python validation: {val}")
 
-try:
-    data = json.loads(val)
-    for item in data:
-        url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
-        payload = json.dumps({
-            "name": item["name"],
-            "test_case": {"id": item["id"]}
-        })
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
-        }
-        response = requests.post(url, headers=headers, data=payload)
-        print("Test Run Response:", response.text)
-except json.JSONDecodeError as e:
-    print(f"Error parsing JSON: {e}")
-    exit(2)
-EOF
+          try:
+              data = json.loads(val)
+              for item in data:
+                  url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
+                  payload = json.dumps({
+                      "name": item["name"],
+                      "test_case": {"id": item["id"]}
+                  })
+                  headers = {
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
+                  }
+                  response = requests.post(url, headers=headers, data=payload)
+                  print("Test Run Response:", response.text)
+          except json.JSONDecodeError as e:
+              print(f"Error parsing JSON: {e}")
+              exit(2)
+          EOF
 
       # - name: Fetch values
       #   run: |
