@@ -24,20 +24,22 @@ jobs:
 
       - name: Fetch values
         run: |
+          set -e  # Stop script on any error
+          
           # Extract the first two characters from a string
           FIRST_TWO_CHARS="05.04 - Fixed Asset Accounting"
           FIRST_TWO_CHARS="${FIRST_TWO_CHARS:0:2}"
           echo "Extracted FIRST_TWO_CHARS: $FIRST_TWO_CHARS"
           echo "FIRST_TWO_CHARS=$FIRST_TWO_CHARS" >> $GITHUB_ENV
           
-          # Fetch module data based on search query
+          # Fetch module data
           response=$(curl --silent --location "https://equinor.qtestnet.com/api/v3/projects/119783/modules?search=$FIRST_TWO_CHARS" \
             --header "Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21")
 
           echo "Response from module search: $response"
 
-          # Extract first module ID
-          PARENT_ID=$(echo "$response" | jq -r '.[0].id')
+          # Extract first module ID safely
+          PARENT_ID=$(echo "$response" | jq -r '.[0].id' 2>/dev/null || echo "")
 
           if [[ -z "$PARENT_ID" || "$PARENT_ID" == "null" ]]; then
             echo "Error: No parent module found!"
@@ -46,12 +48,18 @@ jobs:
 
           echo "Extracted Parent ID: $PARENT_ID"
 
-          # Fetch descendants of the parent module
+          # Fetch descendants
           response1=$(curl --silent --location "https://equinor.qtestnet.com/api/v3/projects/119783/modules/$PARENT_ID?expand=descendants" \
             --header "Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21")
 
-          # Extract child IDs
-          child_ids=($(echo "$response1" | jq -r '.children[].id'))
+          # Validate JSON before parsing
+          if ! echo "$response1" | jq empty 2>/dev/null; then
+            echo "Error: Invalid JSON response from descendants API"
+            exit 2
+          fi
+
+          # Extract child IDs safely
+          child_ids=($(echo "$response1" | jq -r '.children[].id' 2>/dev/null || echo ""))
 
           if [ ${#child_ids[@]} -eq 0 ]; then
             echo "No child modules found!"
@@ -60,7 +68,7 @@ jobs:
 
           echo "Extracted Child IDs: ${child_ids[@]}"
 
-          # Loop through child IDs and fetch test cases
+          # Loop through child IDs
           for id in "${child_ids[@]}"; do
             echo "Processing Child ID: $id"
 
@@ -72,10 +80,14 @@ jobs:
               continue
             fi
 
-            # Process JSON and extract test case ID & name
-            RESULT=$(python3 -c "import json, sys; 
-            data = json.loads(sys.stdin.read()); 
-            print(json.dumps([(item['id'], item['name']) for item in data]))" <<< "$result")
+            # Validate JSON before parsing
+            if ! echo "$result" | jq empty 2>/dev/null; then
+              echo "Error: Invalid JSON response for test cases"
+              continue
+            fi
+
+            # Extract test case data
+            RESULT=$(echo "$result" | jq -c '[.[] | {id: .id, name: .name}]' 2>/dev/null || echo "[]")
 
             if [[ -z "$RESULT" || "$RESULT" == "[]" ]]; then
               echo "No valid test cases found!"
@@ -84,34 +96,34 @@ jobs:
 
             echo "Extracted test cases: $RESULT"
 
-            # Pass extracted data to Python script for test-run creation
+            # Pass extracted data to Python script
             python3 <<EOF
-          import json
-          import requests
-          import os
+import json
+import requests
+import os
 
-          # Load extracted test case data
-          val = '''$RESULT'''
-          print(f"From Python validation: {val}")
+# Load extracted test case data
+val = '''$RESULT'''
+print(f"From Python validation: {val}")
 
-          # Convert JSON string to list
-          try:
-              data = json.loads(val)
-              for item in data:
-                  url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
-                  payload = json.dumps({
-                      "name": item[1],
-                      "test_case": {"id": item[0]}
-                  })
-                  headers = {
-                      "Content-Type": "application/json",
-                      "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
-                  }
-                  response = requests.post(url, headers=headers, data=payload)
-                  print("Test Run Response:", response.text)
-          except json.JSONDecodeError as e:
-              print(f"Error parsing JSON: {e}")
-          EOF
+try:
+    data = json.loads(val)
+    for item in data:
+        url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
+        payload = json.dumps({
+            "name": item["name"],
+            "test_case": {"id": item["id"]}
+        })
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
+        }
+        response = requests.post(url, headers=headers, data=payload)
+        print("Test Run Response:", response.text)
+except json.JSONDecodeError as e:
+    print(f"Error parsing JSON: {e}")
+    exit(2)
+EOF
 
       # - name: Fetch values
       #   run: |
