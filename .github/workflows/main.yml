@@ -42,8 +42,8 @@ jobs:
          for id in "${child_ids[@]}"; do
             echo "Processing ID: $id"
             curl --location "https://xx.qtestnet.com/api/v3/projects/119783/test-cases?parentId=$id" \
-              --header "Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21"
-          done
+              --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21'
+         done
          
          
        
