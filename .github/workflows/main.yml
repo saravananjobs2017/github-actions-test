@@ -26,7 +26,7 @@ jobs:
         run: |
           set -e  # Stop script on any error
 
-           test-suite-id=$(curl  --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-suites?parentId=5332831&parentType=test-cycle'  --header 'Content-Type: application/json' --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21'      --data "$(cat <<EOF
+          test-suite-id=$(curl  --location 'https://equinor.qtestnet.com/api/v3/projects/119783/test-suites?parentId=5332831&parentType=test-cycle'  --header 'Content-Type: application/json' --header 'Authorization: Bearer ca42f96c-8c1e-4868-b0cd-5d1f7ad57f21'      --data "$(cat <<EOF
             {
             "name": "05.04 - Fixed Asset Accounting",
             "properties": [
@@ -45,7 +45,8 @@ jobs:
             ]
               }
             EOF
-            )")
+            )"
+          )
           echo $test-suite-id
           # Extract the first two characters from a string
           FIRST_TWO_CHARS="05.04 - Fixed Asset Accounting"
