@@ -51,8 +51,10 @@ jobs:
             }')"
             )
           echo "Test Suite ID: $test_suite_id"
+          test_suite_id=$(echo "$test_suite_id" | jq '.id')
 
-          echo $test-suite-id
+          echo "Extracted ID: $test_suite_id"
+
           # Extract the first two characters from a string
           FIRST_TWO_CHARS="05.04 - Fixed Asset Accounting"
           FIRST_TWO_CHARS="${FIRST_TWO_CHARS:0:2}"
