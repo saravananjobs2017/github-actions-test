@@ -138,7 +138,7 @@ jobs:
           try:
               data = json.loads(val)
               for item in data:
-                  url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=7409360&parentType=test-suite"
+                  url = "https://equinor.qtestnet.com/api/v3/projects/119783/test-runs?parentId=$test_suite_id&parentType=test-suite"
                   payload = json.dumps({
                       "name": item["name"],
                       "test_case": {"id": item["id"]}
